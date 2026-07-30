@@ -21,7 +21,7 @@
             const [formData, setFormData] = useState({uniqueId: '', name: '', allergies: '', currentMeds: '', contactLenses: false, emergencyContact: '', fitnessToPlay: 'Yes', fitnessNotes: ''});
             useEffect(() => {const savedData = localStorage.getItem('squad-medical-data'); if (savedData) {setMedicalData(JSON.parse(savedData));}}, []);
             const saveData = (data) => {localStorage.setItem('squad-medical-data', JSON.stringify(data));};
-            const handleStaffLogin = (e) => {e.preventDefault(); if (passwordInput === 'MedStaff2024') {setView('staffDashboard');} else {alert('Incorrect password');}};
+            const handleStaffLogin = (e) => {e.preventDefault(); if (passwordInput === 'NEMO2022') {setView('staffDashboard');} else {alert('Incorrect password');}};
             const handlePlayerEntry = (e) => {e.preventDefault(); if (!formData.uniqueId || !formData.name || !formData.allergies) {alert('Please fill in Name, Birthday, and Allergies'); return;}
                 const duplicateNames = medicalData.filter(entry => entry.name.toLowerCase() === formData.name.toLowerCase() && entry.uniqueId !== formData.uniqueId);
                 if (duplicateNames.length > 0) {const confirmed = window.confirm(`Warning: There is already someone named "${formData.name}" with a different birthday.\n\nYour record will be saved under birthday: ${formData.uniqueId}\n\nContinue?`); if (!confirmed) return;}
