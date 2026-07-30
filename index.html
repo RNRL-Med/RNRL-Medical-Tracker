@@ -59,6 +59,104 @@
                 e.preventDefault();
                 
                 if (!formData.uniqueId || !formData.name || !formData.allergies) {
+                    alert('Please fill in at least Name, Birthday, and Allergies');
+                    return;
+                }
+
+                // Check if there are other people with the same name but different identifier
+                const duplicateNames = medicalData.filter(entry => 
+                    entry.name.toLowerCase() === formData.name.toLowerCase() && 
+                    entry.uniqueId !== formData.uniqueId
+                );
+
+                if (duplicateNames.length > 0) {
+                    const confirmed = window.confirm(
+                        `Warning: There is already someone named "${formData.name}" with a different birthday.\n\nYour record will be saved under birthday: ${formData.uniqueId}\n\nContinue?`
+                    );
+                    if (!confirmed) {
+                        return;
+                    }
+                }
+
+                const newEntry = {
+                    ...formData,
+                    timestamp: new Date().toISOString(),
+                    id: Date.now()
+                };
+
+                const updated = [
+                    ...medicalData.filter(entry => entry.uniqueId !== formData.uniqueId),
+                    newEntry
+                ];
+
+                saveData(updated);
+                setMedicalData(updated);
+                
+                setFormData({
+                    uniqueId: '',
+                    name: '',
+                    allergies: '',
+                    currentMeds: '',
+                    contactLenses: false,
+                    emergencyContact: '',
+                    fitnessToPlay: 'Yes',
+                    fitnessNotes: ''
+                });
+                
+                alert('Your medical information has been saved. Thank you.');
+            };
+
+            const formatDate = (isoString) => {
+                return new Date(isoString).toLocaleDateString('en-GB', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            };
+
+            const handleDelete = (id) => {
+                if (window.confirm('Delete this player\'s record?')) {
+                    const updated = medicalData.filter(entry => entry.id !== id);
+                    saveData(updated);
+                    setMedicalData(updated);
+                }
+            };
+
+            if (view === 'login') {
+                return (
+                    <div className="min-h-screen bg-gradient-to-b from-blue-900 to-blue-700 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+                            <h1 className="text-2xl font-bold text-gray-900 mb-2">Squad Medical Tracker</h1>
+                            <p className="text-gray-600 mb-6">Rugby League Team</p>
+
+                            <div className="space-y-4 mb-6">
+                                <button            useEffect(() => {
+                const savedData = localStorage.getItem('squad-medical-data');
+                if (savedData) {
+                    setMedicalData(JSON.parse(savedData));
+                }
+            }, []);
+
+            const saveData = (data) => {
+                localStorage.setItem('squad-medical-data', JSON.stringify(data));
+            };
+
+            const handleStaffLogin = (e) => {
+                e.preventDefault();
+                if (passwordInput === 'NEMO2022') {
+                    setStaffPassword(passwordInput);
+                    setView('staffDashboard');
+                } else {
+                    alert('Incorrect password');
+                }
+            };
+
+            const handlePlayerEntry = (e) => {
+                e.preventDefault();
+                
+                if (!formData.uniqueId || !formData.name || !formData.allergies) {
                     alert('Please fill in at least Unique Identifier, Name, and Allergies');
                     return;
                 }
