@@ -25,7 +25,7 @@
             const [medicalData, setMedicalData] = useState([]);
             const [sortBy, setSortBy] = useState('surname');
             const [loading, setLoading] = useState(false);
-            const [formData, setFormData] = useState({firstName: '', surname: '', uniqueId: '', allergies: '', currentMeds: '', contactLenses: false, emergencyContact: '', fitnessToPlay: 'Yes', fitnessNotes: ''});
+            const [formData, setFormData] = useState({firstname: '', surname: '', uniqueid: '', allergies: '', currentmeds: '', contactlenses: false, emergencycontact: '', fitnesstoplay: 'Yes', fitnessnotes: ''});
 
             useEffect(() => {
                 if (view === 'staffDashboard') {
@@ -55,25 +55,25 @@
 
             const handlePlayerEntry = async (e) => {
                 e.preventDefault();
-                if (!formData.uniqueId || !formData.firstName || !formData.surname || !formData.allergies) {
+                if (!formData.uniqueid || !formData.firstname || !formData.surname || !formData.allergies) {
                     alert('Please fill in First Name, Surname, Birthday, and Allergies');
                     return;
                 }
 
                 setLoading(true);
-                const fullName = `${formData.firstName} ${formData.surname}`;
+                const fullName = `${formData.firstname} ${formData.surname}`;
                 
                 // Check for duplicate names with different birthdays
                 const { data: existing } = await supabase
                     .from('medical_data')
                     .select('*')
-                    .eq('firstName', formData.firstName)
+                    .eq('firstname', formData.firstname)
                     .eq('surname', formData.surname);
                 
-                const duplicateNames = existing?.filter(e => e.uniqueId !== formData.uniqueId) || [];
+                const duplicateNames = existing?.filter(e => e.uniqueid !== formData.uniqueid) || [];
                 
                 if (duplicateNames.length > 0) {
-                    const confirmed = window.confirm(`Warning: There is already someone named "${fullName}" with a different birthday.\n\nYour record will be saved under birthday: ${formData.uniqueId}\n\nContinue?`);
+                    const confirmed = window.confirm(`Warning: There is already someone named "${fullName}" with a different birthday.\n\nYour record will be saved under birthday: ${formData.uniqueid}\n\nContinue?`);
                     if (!confirmed) {
                         setLoading(false);
                         return;
@@ -84,9 +84,9 @@
                 const { data: existingRecord } = await supabase
                     .from('medical_data')
                     .select('*')
-                    .eq('firstName', formData.firstName)
+                    .eq('firstname', formData.firstname)
                     .eq('surname', formData.surname)
-                    .eq('uniqueId', formData.uniqueId)
+                    .eq('uniqueid', formData.uniqueid)
                     .single();
 
                 if (existingRecord) {
@@ -99,7 +99,7 @@
                         alert('Error saving data: ' + error.message);
                     } else {
                         alert('Your medical information has been updated. Thank you.');
-                        setFormData({firstName: '', surname: '', uniqueId: '', allergies: '', currentMeds: '', contactLenses: false, emergencyContact: '', fitnessToPlay: 'Yes', fitnessNotes: ''});
+                        setFormData({firstname: '', surname: '', uniqueid: '', allergies: '', currentmeds: '', contactlenses: false, emergencycontact: '', fitnesstoplay: 'Yes', fitnessnotes: ''});
                         setView('login');
                     }
                 } else {
@@ -111,7 +111,7 @@
                         alert('Error saving data: ' + error.message);
                     } else {
                         alert('Your medical information has been saved. Thank you.');
-                        setFormData({firstName: '', surname: '', uniqueId: '', allergies: '', currentMeds: '', contactLenses: false, emergencyContact: '', fitnessToPlay: 'Yes', fitnessNotes: ''});
+                        setFormData({firstname: '', surname: '', uniqueid: '', allergies: '', currentmeds: '', contactlenses: false, emergencycontact: '', fitnesstoplay: 'Yes', fitnessnotes: ''});
                         setView('login');
                     }
                 }
@@ -150,7 +150,7 @@
                             <h1 className="text-2xl font-bold text-gray-900 mb-2">Squad Medical Tracker</h1>
                             <p className="text-gray-600 mb-6">Rugby League Team</p>
                             <div className="space-y-4 mb-6">
-                                <button onClick={() => {setView('playerEntry'); setFormData({firstName: '', surname: '', uniqueId: '', allergies: '', currentMeds: '', contactLenses: false, emergencyContact: '', fitnessToPlay: 'Yes', fitnessNotes: ''});}} className="w-full bg-blue-600 text-white py-3 rounded font-semibold hover:bg-blue-700 transition">Player: Enter/Update Information</button>
+                                <button onClick={() => {setView('playerEntry'); setFormData({firstname: '', surname: '', uniqueid: '', allergies: '', currentmeds: '', contactlenses: false, emergencycontact: '', fitnesstoplay: 'Yes', fitnessnotes: ''});}} className="w-full bg-blue-600 text-white py-3 rounded font-semibold hover:bg-blue-700 transition">Player: Enter/Update Information</button>
                                 <form onSubmit={handleStaffLogin} className="space-y-3">
                                     <input type="password" placeholder="Staff password" value={passwordInput} onChange={(e) => setPasswordInput(e.target.value)} className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" />
                                     <button type="submit" className="w-full bg-gray-700 text-white py-3 rounded font-semibold hover:bg-gray-800 transition">Medical Staff: View Dashboard</button>
@@ -175,7 +175,7 @@
                                 <form onSubmit={handlePlayerEntry} className="space-y-4">
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-900 mb-1">First Name *</label>
-                                        <input type="text" value={formData.firstName} onChange={(e) => setFormData({...formData, firstName: e.target.value})} placeholder="e.g., John" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
+                                        <input type="text" value={formData.firstname} onChange={(e) => setFormData({...formData, firstname: e.target.value})} placeholder="e.g., John" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-900 mb-1">Surname *</label>
@@ -183,7 +183,7 @@
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-900 mb-1">Date and Month of Your Birthday *</label>
-                                        <input type="text" value={formData.uniqueId} onChange={(e) => setFormData({...formData, uniqueId: e.target.value})} placeholder="e.g., 1505 (15th May)" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
+                                        <input type="text" value={formData.uniqueid} onChange={(e) => setFormData({...formData, uniqueid: e.target.value})} placeholder="e.g., 1505 (15th May)" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-900 mb-1">Drug Allergies *</label>
@@ -191,28 +191,28 @@
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-900 mb-1">Current Medications</label>
-                                        <textarea value={formData.currentMeds} onChange={(e) => setFormData({...formData, currentMeds: e.target.value})} placeholder="e.g., Metformin 500mg BD" rows="2" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
+                                        <textarea value={formData.currentmeds} onChange={(e) => setFormData({...formData, currentmeds: e.target.value})} placeholder="e.g., Metformin 500mg BD" rows="2" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
                                     </div>
                                     <div className="flex items-center space-x-3">
-                                        <input type="checkbox" id="contactLenses" checked={formData.contactLenses} onChange={(e) => setFormData({...formData, contactLenses: e.target.checked})} className="w-4 h-4" disabled={loading} />
-                                        <label htmlFor="contactLenses" className="text-gray-900">I wear contact lenses</label>
+                                        <input type="checkbox" id="contactlenses" checked={formData.contactlenses} onChange={(e) => setFormData({...formData, contactlenses: e.target.checked})} className="w-4 h-4" disabled={loading} />
+                                        <label htmlFor="contactlenses" className="text-gray-900">I wear contact lenses</label>
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-900 mb-1">Emergency Contact</label>
-                                        <input type="text" value={formData.emergencyContact} onChange={(e) => setFormData({...formData, emergencyContact: e.target.value})} placeholder="Name and phone number" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
+                                        <input type="text" value={formData.emergencycontact} onChange={(e) => setFormData({...formData, emergencycontact: e.target.value})} placeholder="Name and phone number" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-semibold text-gray-900 mb-1">Currently Fit to Play?</label>
-                                        <select value={formData.fitnessToPlay} onChange={(e) => setFormData({...formData, fitnessToPlay: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading}>
+                                        <select value={formData.fitnesstoplay} onChange={(e) => setFormData({...formData, fitnesstoplay: e.target.value})} className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading}>
                                             <option value="Yes">Yes</option>
                                             <option value="No">No</option>
                                             <option value="Conditional">Conditional (see notes)</option>
                                         </select>
                                     </div>
-                                    {formData.fitnessToPlay !== 'Yes' && (
+                                    {formData.fitnesstoplay !== 'Yes' && (
                                         <div>
                                             <label className="block text-sm font-semibold text-gray-900 mb-1">Please explain:</label>
-                                            <textarea value={formData.fitnessNotes} onChange={(e) => setFormData({...formData, fitnessNotes: e.target.value})} placeholder="e.g., Shoulder injury" rows="2" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
+                                            <textarea value={formData.fitnessnotes} onChange={(e) => setFormData({...formData, fitnessnotes: e.target.value})} placeholder="e.g., Shoulder injury" rows="2" className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-600" disabled={loading} />
                                         </div>
                                     )}
                                     <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded font-semibold hover:bg-blue-700 transition disabled:bg-gray-400" disabled={loading}>{loading ? 'Saving...' : 'Save My Information'}</button>
@@ -254,11 +254,11 @@
                                         <div key={entry.id} className="bg-white rounded-lg shadow p-6">
                                             <div className="flex justify-between items-start mb-4">
                                                 <div>
-                                                    <h2 className="text-xl font-bold text-gray-900">{entry.surname}, {entry.firstName}</h2>
-                                                    <p className="text-sm text-gray-600">Birthday: {entry.uniqueId}</p>
+                                                    <h2 className="text-xl font-bold text-gray-900">{entry.surname}, {entry.firstname}</h2>
+                                                    <p className="text-sm text-gray-600">Birthday: {entry.uniqueid}</p>
                                                     <p className="text-xs text-gray-500">Last edited: {formatDate(entry.timestamp)}</p>
                                                 </div>
-                                                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${entry.fitnessToPlay === 'Yes' ? 'bg-green-100 text-green-800' : entry.fitnessToPlay === 'No' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>Fitness: {entry.fitnessToPlay}</span>
+                                                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${entry.fitnesstoplay === 'Yes' ? 'bg-green-100 text-green-800' : entry.fitnesstoplay === 'No' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>Fitness: {entry.fitnesstoplay}</span>
                                             </div>
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                                 <div>
@@ -267,21 +267,21 @@
                                                 </div>
                                                 <div>
                                                     <p className="text-xs font-semibold text-gray-600">MEDICATIONS</p>
-                                                    <p className="text-gray-900">{entry.currentMeds || '—'}</p>
+                                                    <p className="text-gray-900">{entry.currentmeds || '—'}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-xs font-semibold text-gray-600">EMERGENCY CONTACT</p>
-                                                    <p className="text-gray-900">{entry.emergencyContact || '—'}</p>
+                                                    <p className="text-gray-900">{entry.emergencycontact || '—'}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-xs font-semibold text-gray-600">CONTACT LENSES</p>
-                                                    <p className="text-gray-900">{entry.contactLenses ? 'Yes' : 'No'}</p>
+                                                    <p className="text-gray-900">{entry.contactlenses ? 'Yes' : 'No'}</p>
                                                 </div>
                                             </div>
-                                            {entry.fitnessNotes && (
+                                            {entry.fitnessnotes && (
                                                 <div className="bg-yellow-50 border border-yellow-200 rounded p-3 mb-4">
                                                     <p className="text-xs font-semibold text-yellow-900">FITNESS NOTES</p>
-                                                    <p className="text-yellow-900">{entry.fitnessNotes}</p>
+                                                    <p className="text-yellow-900">{entry.fitnessnotes}</p>
                                                 </div>
                                             )}
                                             <button onClick={() => handleDelete(entry.id)} className="text-red-600 hover:text-red-800 text-sm" disabled={loading}>Delete Record</button>
